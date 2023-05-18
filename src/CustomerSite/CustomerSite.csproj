@@ -9,11 +9,13 @@
 	  <RootNamespace>Marketplace.SaaS.Accelerator.CustomerSite</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Microsoft.MarketPlace.SaasKit.Web' " />
   <ItemGroup>
     <Compile Remove="Context\**" />
     <Content Remove="Context\**" />
     <EmbeddedResource Remove="Context\**" />
     <None Remove="Context\**" />
+    <Content Remove="appsettings.Development.json" />
   </ItemGroup>
 
   <ItemGroup>
