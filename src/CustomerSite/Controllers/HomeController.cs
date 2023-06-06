@@ -404,6 +404,13 @@ public class HomeController : BaseController
         {
             if (this.User.Identity.IsAuthenticated)
             {
+                // Validate subscription from same customer
+                var subscriptionDetail = this.subscriptionService.GetPartnerSubscription(this.CurrentUserEmailAddress, subscriptionId).FirstOrDefault();
+                if(subscriptionDetail == null)
+                {
+                    return this.RedirectToAction(nameof(this.Index));
+                }
+
                 List<SubscriptionAuditLogs> subscriptionAudit = new List<SubscriptionAuditLogs>();
                 subscriptionAudit = this.subscriptionLogRepository.GetSubscriptionBySubscriptionId(subscriptionId).ToList();
                 return this.PartialView(subscriptionAudit);
@@ -515,6 +522,7 @@ public class HomeController : BaseController
     /// Subscriptions operation.
     /// </returns>
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult SubscriptionOperation(SubscriptionResultExtension subscriptionResultExtension, Guid subscriptionId, string planId, string operation)
     {
         this.logger.LogInformation("Home Controller / SubscriptionOperation subscriptionId:{0} :: planId : {1} :: operation:{2}", JsonSerializer.Serialize(subscriptionId), JsonSerializer.Serialize(planId), JsonSerializer.Serialize(operation));
@@ -625,6 +633,7 @@ public class HomeController : BaseController
     /// <param name="subscriptionDetail">The subscription detail.</param>
     /// <returns>Changes subscription plan.</returns>
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangeSubscriptionPlan(SubscriptionResult subscriptionDetail)
     {
         this.logger.LogInformation("Home Controller / ChangeSubscriptionPlan  subscriptionDetail:{0}", JsonSerializer.Serialize(subscriptionDetail));
@@ -702,6 +711,7 @@ public class HomeController : BaseController
     /// <param name="subscriptionDetail">The subscription detail.</param>
     /// <returns>Changes subscription quantity.</returns>
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangeSubscriptionQuantity(SubscriptionResult subscriptionDetail)
     {
         this.logger.LogInformation("Home Controller / ChangeSubscriptionPlan  subscriptionDetail:{0}", JsonSerializer.Serialize(subscriptionDetail));

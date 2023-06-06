@@ -27,7 +27,7 @@ Param(
    [string][Parameter()]$LogoURLpng,  # URL for Publisher .png logo
    [string][Parameter()]$LogoURLico,  # URL for Publisher .ico logo
    [string][Parameter()]$KeyVault, # Name of KeyVault
-   [switch][Parameter()]$MeteredSchedulerSupport, # set to true to enable Metered Support
+   [switch][Parameter()]$MeteredSchedulerSupport, # Add this key like -MeteredSchedulerSupport to the command to enable Metered Scheduler Support
    [switch][Parameter()]$Quiet #if set, only show error / warning output from script commands
 )
 
@@ -81,10 +81,11 @@ if($WebAppNamePrefix.Length -gt 21) {
 }
 
 
-if(!($KeyVault -match "^[a-z0-9-]+$")) {
-    Throw "🛑 KeyVault name only allows alphanumeric and hyphens."
+if(!($KeyVault -match "^[a-zA-Z][a-z0-9-]+$")) {
+    Throw "🛑 KeyVault name only allows alphanumeric and hyphens, but cannot start with a number or special character."
     Exit
 }
+
 #endregion 
 
 Write-Host "Starting SaaS Accelerator Deployment..."
